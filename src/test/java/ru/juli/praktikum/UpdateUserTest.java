@@ -1,34 +1,15 @@
 package ru.juli.praktikum;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import ru.juli.praktikum.client.User;
-import ru.juli.praktikum.client.StellarBurgersClientImpl;
-import ru.juli.praktikum.user.UserGenerator;
-import ru.juli.praktikum.user.UserSteps;
+import ru.juli.praktikum.util.Util;
 
 import static org.hamcrest.Matchers.equalTo;
-import static ru.juli.praktikum.constants.Url.REQUEST_SPECIFICATION;
-import static ru.juli.praktikum.constants.Url.RESPONSE_SPECIFICATION;
 import static ru.juli.praktikum.user.UserSteps.*;
 
-public class UpdateUserTest {
-    private User user;
-    private StellarBurgersClientImpl client = new StellarBurgersClientImpl(REQUEST_SPECIFICATION, RESPONSE_SPECIFICATION);
-    protected final UserGenerator userGenerator = new UserGenerator();
-    private String accessToken;
-
-    @Before
-    @Step("Создание тестовых данных пользователя") // Создание тестовых данных пользователя
-    public void setUp() {
-        UserSteps userSteps = new UserSteps();
-        user = userGenerator.createNewUnicUser();
-    }
+public class UpdateUserTest extends Util {
     @Test
     @DisplayName("update user Email") // имя теста успешное обновление Email пользователя
     @Description("you can not update user Email") // описание теста поля пользователя можно обновить с авторизацией
@@ -75,12 +56,5 @@ public class UpdateUserTest {
         ValidatableResponse response_2 = updateUserUnauthorized(user);
         response_2.assertThat().statusCode(401).and().assertThat().body("message", equalTo("You should be authorised"));
 
-    }
-    @After
-    @Step("удаление данных пользователя") // удаление данных пользователя
-    public void cleanUp() {
-        if (accessToken != null) {
-            client.deleteUser(String.valueOf(accessToken)); // удаляем созданного пользователя
-        }
     }
 }

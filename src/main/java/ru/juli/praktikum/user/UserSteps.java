@@ -6,8 +6,6 @@ import ru.juli.praktikum.client.Credentials;
 import ru.juli.praktikum.client.User;
 import ru.juli.praktikum.client.StellarBurgersClientImpl;
 
-import java.util.List;
-
 import static ru.juli.praktikum.constants.Url.REQUEST_SPECIFICATION;
 import static ru.juli.praktikum.constants.Url.RESPONSE_SPECIFICATION;
 

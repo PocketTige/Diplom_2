@@ -1,37 +1,16 @@
 package ru.juli.praktikum;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import ru.juli.praktikum.client.StellarBurgersClientImpl;
-import ru.juli.praktikum.client.User;
-import ru.juli.praktikum.user.UserGenerator;
-import ru.juli.praktikum.user.UserSteps;
+import ru.juli.praktikum.util.Util;
 import java.util.List;
-
 import static org.hamcrest.Matchers.equalTo;
-import static ru.juli.praktikum.constants.Url.REQUEST_SPECIFICATION;
-import static ru.juli.praktikum.constants.Url.RESPONSE_SPECIFICATION;
 import static ru.juli.praktikum.order.OrderSteps.*;
 import static ru.juli.praktikum.user.UserSteps.*;
 
-public class CreateOrderTest {
-    private User user;
-    private StellarBurgersClientImpl client = new StellarBurgersClientImpl(REQUEST_SPECIFICATION, RESPONSE_SPECIFICATION);
-    protected final UserGenerator userGenerator = new UserGenerator();
-    private String accessToken;
-
-
-    @Before
-    @Step("Создание тестовых данных пользователя") // Создание тестовых данных пользователя
-    public void setUp() {
-        UserSteps userSteps = new UserSteps();
-        user = userGenerator.createNewUnicUser();
-    }
+public class CreateOrderTest extends Util{
 
     @Test
     @DisplayName("create new order") // имя теста успешное создание заказа с авторизацией,
@@ -81,11 +60,4 @@ public class CreateOrderTest {
         ValidatableResponse response_3 = createOrder(ingredients, accessToken);
         response_3.assertThat().statusCode(500);
     }
-@After
-@Step("удаление данных пользователя") // удаление данных пользователя
-public void cleanUp() {
-    if (accessToken != null) {
-        client.deleteUser(String.valueOf(accessToken)); // удаляем созданного пользователя
-    }
-}
 }

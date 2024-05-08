@@ -1,35 +1,16 @@
 package ru.juli.praktikum;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import ru.juli.praktikum.client.User;
-import ru.juli.praktikum.client.StellarBurgersClientImpl;
-import ru.juli.praktikum.user.UserGenerator;
-import ru.juli.praktikum.user.UserSteps;
+import ru.juli.praktikum.util.Util;
 
 import static org.hamcrest.Matchers.equalTo;
-import static ru.juli.praktikum.constants.Url.REQUEST_SPECIFICATION;
-import static ru.juli.praktikum.constants.Url.RESPONSE_SPECIFICATION;
 import static ru.juli.praktikum.user.UserSteps.createUser;
 import static ru.juli.praktikum.user.UserSteps.loginUser;
 
-public class LoginUserTest {
-    private User user;
-    private StellarBurgersClientImpl client = new StellarBurgersClientImpl(REQUEST_SPECIFICATION, RESPONSE_SPECIFICATION);
-    protected final UserGenerator userGenerator = new UserGenerator();
-    private String accessToken;
-
-    @Before
-    @Step("Создание тестовых данных пользователя") // Создание тестовых данных пользователя
-    public void setUp() {
-        UserSteps userSteps = new UserSteps();
-        user = userGenerator.createNewUnicUser();
-    }
+public class LoginUserTest extends Util {
 
     @Test
     @DisplayName("Login new user") // имя теста успешная авторизация пользователя
@@ -64,12 +45,5 @@ public class LoginUserTest {
         user.setEmail(currentPassword + "nonexistent");  // Добавляем символы к логину, делая его несуществующим невалидным
         ValidatableResponse response2 = loginUser(user, accessToken);
         response2.assertThat().statusCode(401).and().assertThat().body("message", equalTo("email or password are incorrect"));
-    }
-    @After
-    @Step("удаление данных пользователя") // удаление данных пользователя
-    public void cleanUp() {
-        if (accessToken != null) {
-            client.deleteUser(String.valueOf(accessToken)); // удаляем созданного пользователя
-        }
     }
 }
